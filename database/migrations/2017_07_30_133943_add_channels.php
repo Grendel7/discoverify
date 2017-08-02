@@ -16,7 +16,7 @@ class AddChannels extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('feed_url');
+            $table->string('channel_id');
             $table->string('playlist_id');
             $table->unsignedInteger('user_id');
             $table->timestamps();

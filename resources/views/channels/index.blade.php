@@ -27,12 +27,18 @@
                             </tr>
                             @foreach ($channels as $channel)
                                 <tr>
-                                    <td>{{ $channel->name }}</td>
+                                    <td>
+                                        <a href="{{ route('channels.show', ['channel' => $channel]) }}">
+                                            {{ $channel->name }}
+                                        </a>
+                                    </td>
                                     <td class="text-right">
                                         <a href="{{ route('channels.edit', ['channel' => $channel]) }}" class="btn btn-primary btn-sm">
                                             Edit
                                         </a>
-                                        <form method="post" action="{{ route('channels.destroy', ['channel' => $channel]) }}" style="display: inline;">
+                                        <form method="post" action="{{ route('channels.destroy', ['channel' => $channel]) }}"
+                                              style="display: inline;"
+                                        >
                                             <button class="btn btn-danger btn-sm">Delete</button>
                                             {{ csrf_field() }}
                                             {{ method_field('DELETE') }}
