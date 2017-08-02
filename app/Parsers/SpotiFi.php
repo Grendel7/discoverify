@@ -33,7 +33,9 @@ class SpotiFi extends AbstractParser
 
     private function getRealUrl($content)
     {
-        $shortenedUrl = Regex::match('/(spoti\.fi\/\w+)/', $content)->result();
+        $matches = [];
+        preg_match('/(spoti\.fi\/\w+)/', $content, $matches);
+        $shortenedUrl = $matches[1];
 
         $response = $this->guzzle->get('https://'.$shortenedUrl, [
             'allow_redirects' => false,

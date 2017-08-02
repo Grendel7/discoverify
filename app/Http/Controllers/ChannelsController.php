@@ -44,12 +44,15 @@ class ChannelsController extends Controller
             ],
         ]);
 
-        $match = Regex::match('/^https:\/\/www\.youtube\.com\/channel\/([\w-]+)$/', $request->get('channel_url'));
-        if ($match->hasMatch()) {
-            $channelId = $match->group(1);
+        $matches = [];
+        preg_match('/^https:\/\/www\.youtube\.com\/channel\/([\w-]+)$/', $request->get('channel_url'), $matches);
+        if ($matches) {
+            $channelId = $matches[1];
         } else {
             $page = (string) (new Client())->get($request->get('channel_url'))->getBody();
-            $channelId = Regex::match('/https:\/\/www\.youtube\.com\/feeds\/videos.xml\?channel_id=([\w-]+)/', $page)->group(1);
+            $matches = [];
+            preg_match('/https:\/\/www\.youtube\.com\/feeds\/videos.xml\?channel_id=([\w-]+)/', $page, $matches);
+            $channelId = $matches[1];
         }
 
         $channel = new Channel();

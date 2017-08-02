@@ -24,7 +24,10 @@ abstract class DownloadGateParser extends AbstractParser
     {
         $domain = str_replace('.', '\.', $this->getDomain());
 
-        return Regex::match("/(https?:\/\/[\w-\.]*{$domain}\/[\w-\/_]+)/", $description)->result();
+        $matches = [];
+        preg_match("/(https?:\/\/[\w-\.]*{$domain}\/[\w-\/_]+)/", $description, $matches);
+
+        return $matches[1];
     }
 
     protected abstract function getDomain();
