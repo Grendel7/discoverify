@@ -15,9 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('login/spotify', 'Auth\LoginController@redirectToProvider');
+Route::get('login/spotify', 'Auth\LoginController@redirectToProvider')->name('login.spotify');
 Route::get('login/spotify/callback', 'Auth\LoginController@handleProviderCallback');
-Auth::routes();
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('channels', 'ChannelsController');
