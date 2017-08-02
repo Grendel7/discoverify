@@ -14,7 +14,6 @@ use App\Parsers\Revealed;
 use App\Parsers\SmartUrl;
 use App\Parsers\SpotiFi;
 use App\Track;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class FetchTracks extends Command
@@ -34,6 +33,8 @@ class FetchTracks extends Command
     protected $description = 'Check all feeds for new tracks.';
 
     protected $parsers = [];
+
+    protected $playlistItems = [];
 
     /**
      * Create a new command instance.
@@ -64,7 +65,7 @@ class FetchTracks extends Command
         $channels = Channel::all();
 
         foreach ($channels as $channel) {
-            $xml = simplexml_load_string(file_get_contents($channel->feed_url));
+            $xml = simplexml_load_string(file_get_contents($channel->getFeedUrl()));
 
             $channel->user->assertValidAccessToken();
             app('spotify')->setAccessToken($channel->user->access_token);
@@ -73,13 +74,13 @@ class FetchTracks extends Command
                 $youTubeId = $entry->children('yt', true)->videoId;
 
                 if (!Track::where('channel_id', $channel->id)->where('youtube_id', $youTubeId)->exists()) {
-                    $this->addTrackToPlaylist($channel, $entry);
+                    $this->searchTrackForChannel($channel, $entry);
                 }
             }
         }
     }
 
-    protected function addTrackToPlaylist(Channel $channel, \SimpleXMLElement $entry)
+    protected function searchTrackForChannel(Channel $channel, \SimpleXMLElement $entry)
     {
         $track = new Track();
         $track->youtube_id = $entry->children('yt', true)->videoId;
@@ -104,7 +105,7 @@ class FetchTracks extends Command
 
             if (isset($spotifyId) && $spotifyId) {
                 $spotifyTrack = app('spotify')->getTrack($spotifyId);
-                app('spotify')->addUserPlaylistTracks($channel->user->remote_id, $channel->playlist_id, $spotifyId);
+                $this->addTrackToPlaylist($channel, $spotifyTrack);
                 $track->spotify_id = $spotifyId;
 
                 $artists = implode(', ', array_map(function ($artist) {
@@ -113,10 +114,10 @@ class FetchTracks extends Command
 
                 $track->spotify_name = $artists.' - '.$spotifyTrack->name;
             } else {
-                $track->error = isset($e) ? $e->getMessage() : 'None of the links contain references to Spotify';
+                $track->error = isset($e) ? $e->getMessage() : 'None of the links contain references to Spotify.';
             }
         } else {
-            $track->error = 'No link parser found';
+            $track->error = 'Usable Spotify URL found.';
         }
 
         $track->saveOrFail();
@@ -125,6 +126,23 @@ class FetchTracks extends Command
             $this->info('Added '.$track->spotify_name.' to a playlist');
         } else {
             $this->warn('Could not find track for '.$track->name);
+        }
+    }
+
+    protected function addTrackToPlaylist(Channel $channel, $track)
+    {
+        if (!isset($this->playlistItems[$channel->playlist_id])) {
+            $tracks = app('spotify')->getuserPlaylistTracks($channel->user->remote_id, $channel->playlist_id);
+
+            $hasTrack = array_first($tracks->items, function($item) use ($track) {
+                return $track->id == $item->track->id;
+            });
+
+            if ($hasTrack) {
+                return;
+            }
+
+            app('spotify')->addUserPlaylistTracks($channel->user->remote_id, $channel->playlist_id, $track->id);
         }
     }
 }
