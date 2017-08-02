@@ -1,51 +1,33 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Discoverify
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Discover music on Spotify using curated YouTube lists.
 
-## About Laravel
+## What is Discoverify?
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+There are many channels on YouTube who publish amazing music you won't have heard before. You could follow these channels on YouTube and check YouTube every day for new music, but YouTube is a video platform, not a music streaming service. Ideally, you'd take the curated lists from YouTube and add them all to Spotify where you can easily listen to them.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+That's what Discoverify does for you. Simply login with your Spotify account, paste in the URL of the YouTube channel you want to follow and select a Spotify playlist you want to add the songs to. Discoverify will watch the channels for new music, find the Spotify links in their descriptions and add the songs to your playlists.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+## System Requirements
 
-## Learning Laravel
+- PHP 5.6.4 or newer
+- A HTTP server with PHP support (Apache, Nginx, Caddy)
+- Composer
+- A supported database: MySQL, PostgreSQL or SQLite
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+## Installation
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+Discoverify is built using Laravel. See the [installation instructions for Laravel](https://laravel.com/docs/5.4/installation).
 
-## Laravel Sponsors
+### Get your Spotify credentials
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+To use Discoverify and login with Spotify, you need to get Spotify OAuth credentials.
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+1. Create your application: https://developer.spotify.com/my-applications/
+2. Add the redirect URL http://your.domain.com/path/to/discoverify/login/spotify
+3. Add the credentials to the `.env` file.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+### Setup the schedule runner
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Add a cron job which executes the command `php artisan schedule:run`. The schedule runner is configured to synchronize music every hour.
