@@ -28,7 +28,7 @@ abstract class AbstractParser
         } elseif (preg_match('/https?\:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
             $albumId = $matches[1];
         } else {
-            throw new ParseException('No Spotify URL on download page');
+            throw new ParseException('No Spotify URL on download page.');
         }
 
         if (isset($trackId)) {

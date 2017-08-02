@@ -6,7 +6,6 @@ use Spatie\Regex\Regex;
 
 class SpotiFi extends AbstractParser
 {
-
     public function canParse($content)
     {
         if (str_contains($content, 'spoti.fi')) {
