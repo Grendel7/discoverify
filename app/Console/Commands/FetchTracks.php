@@ -117,7 +117,7 @@ class FetchTracks extends Command
                 $track->error = isset($e) ? $e->getMessage() : 'None of the links contain references to Spotify.';
             }
         } else {
-            $track->error = 'Usable Spotify URL found.';
+            $track->error = 'No usable URL found.';
         }
 
         $track->saveOrFail();
