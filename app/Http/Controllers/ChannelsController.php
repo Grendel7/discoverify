@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Channel;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Spatie\Regex\Regex;
 
 class ChannelsController extends Controller
 {

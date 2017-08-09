@@ -12,6 +12,7 @@ use App\Parsers\NoCopyrightSounds;
 use App\Parsers\ParseException;
 use App\Parsers\Revealed;
 use App\Parsers\SmartUrl;
+use App\Parsers\SpinninRecords;
 use App\Parsers\SpotiFi;
 use App\Track;
 use Illuminate\Console\Command;
@@ -52,6 +53,7 @@ class FetchTracks extends Command
             new Revealed(),
             new BigAndDirtyRecords(),
             new NoCopyrightSounds(),
+            new SpinninRecords(),
         ];
     }
 

@@ -2,8 +2,6 @@
 
 namespace App\Parsers;
 
-use Spatie\Regex\Regex;
-
 abstract class DownloadGateParser extends AbstractParser
 {
     public function canParse($content)

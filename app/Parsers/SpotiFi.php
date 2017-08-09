@@ -2,8 +2,6 @@
 
 namespace App\Parsers;
 
-use Spatie\Regex\Regex;
-
 class SpotiFi extends AbstractParser
 {
     public function canParse($content)
