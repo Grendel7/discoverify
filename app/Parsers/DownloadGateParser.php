@@ -2,6 +2,9 @@
 
 namespace App\Parsers;
 
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
+
 abstract class DownloadGateParser extends AbstractParser
 {
     public function canParse($content)
@@ -13,7 +16,13 @@ abstract class DownloadGateParser extends AbstractParser
     {
         $url = $this->getUrlFromDescription($content);
 
-        $page = (string) $this->guzzle->get($url)->getBody();
+        try {
+            $page = (string) $this->guzzle->get($url)->getBody();
+        } catch (ClientException $e) {
+            Log::warning('Could not get download gate from `'.$url.'`: '.$e->getMessage());
+
+            throw new ParseException('Download URL returned an error.');
+        }
 
         return $this->getSpotifyIdFromPage($page);
     }
