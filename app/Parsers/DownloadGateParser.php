@@ -2,7 +2,7 @@
 
 namespace App\Parsers;
 
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 
 abstract class DownloadGateParser extends AbstractParser
@@ -18,7 +18,7 @@ abstract class DownloadGateParser extends AbstractParser
 
         try {
             $page = (string) $this->guzzle->get($url)->getBody();
-        } catch (ClientException $e) {
+        } catch (RequestException $e) {
             Log::warning('Could not get download gate from `'.$url.'`: '.$e->getMessage());
 
             throw new ParseException('Download URL returned an error.');
