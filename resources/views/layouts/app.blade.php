@@ -38,6 +38,7 @@
                     <ul class="nav navbar-nav">
                         @if(Auth::user())
                             <li><a href="{{ route('channels.index') }}">My Channels</a></li>
+                            <li><a href="{{ route('tracks.index') }}">My Tracks</a></li>
                         @endif
                     </ul>
 
@@ -57,9 +58,7 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
 
