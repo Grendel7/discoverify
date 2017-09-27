@@ -31,7 +31,12 @@ class User extends Authenticatable
 
     public function channels()
     {
-        return $this->hasMany(Channel::class);
+        return $this->hasMany(UserChannel::class);
+    }
+
+    public function playlists()
+    {
+        return $this->hasMany(Playlist::class);
     }
 
     public function assertValidAccessToken()

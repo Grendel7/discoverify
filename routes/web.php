@@ -21,6 +21,6 @@ Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('channels', 'ChannelsController');
     Route::resource('tracks', 'TracksController');
+    Route::resource('userChannels', 'UserChannelsController');
 });
