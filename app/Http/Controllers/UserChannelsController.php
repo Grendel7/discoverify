@@ -12,7 +12,7 @@ class UserChannelsController extends Controller
     public function index(Request $request)
     {
         return view('userChannels.index', [
-            'userChannels' => $request->user()->channels()->with('channel')->get(),
+            'userChannels' => $request->user()->channels()->with('channel', 'playlists')->get(),
         ]);
     }
 
@@ -76,7 +76,7 @@ class UserChannelsController extends Controller
 
         $tracks = $userChannel->channel->tracks()->orderBy('created_at', 'desc')->paginate(25);
 
-        return view('userChanels.show', [
+        return view('userChannels.show', [
             'userChannel' => $userChannel,
             'tracks' => $tracks,
         ]);

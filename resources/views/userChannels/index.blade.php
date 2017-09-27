@@ -31,6 +31,7 @@
                                         <a href="{{ route('userChannels.show', ['userChannel' => $userChannel]) }}">
                                             {{ $userChannel->channel->name }}
                                         </a>
+                                        ({{ $userChannel->playlists->count() }} playlists)
                                     </td>
                                     <td class="text-right">
                                         <a href="{{ route('userChannels.edit', ['userChannel' => $userChannel]) }}" class="btn btn-primary btn-sm">

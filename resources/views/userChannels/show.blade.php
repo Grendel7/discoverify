@@ -24,7 +24,7 @@
                             <tr>
                                 <th>YouTube</th>
                                 <th>Spotify</th>
-                                <th>Created at</th>
+                                <th nowrap>Retrieved on</th>
                             </tr>
                             @foreach ($tracks as $track)
                                 <tr>
@@ -42,8 +42,8 @@
                                             {{ $track->error }}
                                         @endif
                                     </td>
-                                    <td>
-                                        {{ $track->created_at->format('Y-m-d H:i') }}
+                                    <td nowrap>
+                                        {{ $track->created_at->format('Y-m-d') }}
                                     </td>
                                 </tr>
                             @endforeach

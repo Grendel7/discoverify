@@ -39,6 +39,7 @@
                         @if(Auth::user())
                             <li><a href="{{ route('tracks.index') }}">My Tracks</a></li>
                             <li><a href="{{ route('userChannels.index') }}">My Channels</a></li>
+                            <li><a href="{{ route('playlists.index') }}">My Playlists</a></li>
                         @endif
                     </ul>
 

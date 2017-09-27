@@ -23,4 +23,5 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::resource('tracks', 'TracksController');
     Route::resource('userChannels', 'UserChannelsController');
+    Route::resource('playlists', 'PlaylistsController');
 });
