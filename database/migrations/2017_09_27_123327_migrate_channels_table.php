@@ -18,10 +18,6 @@ class MigrateChannelsTable extends Migration
             $table->dropForeign('tracks_channel_id_foreign');
         });
 
-        Schema::table('tracks', function (Blueprint $table) {
-            $table->dropForeign('tracks_channel_id_foreign');
-        });
-
         Schema::rename('channels', 'channels_old');
 
         Schema::create('channels', function (Blueprint $table) {
