@@ -6,7 +6,13 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        My Tracks
+                        Tracks from {{ $userChannel->channel->name }}
+
+                        <div class="pull-right">
+                            <a href="{{ route('userChannels.index') }}" class="btn btn-xs btn-default">
+                                Back
+                            </a>
+                        </div>
                     </div>
 
                     <div class="panel-body">

@@ -6,7 +6,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        New Channel
+                        Add Playlist
                     </div>
 
                     <div class="panel-body">
@@ -16,27 +16,30 @@
                             @endforeach
                         @endif
 
-                        <form method="post" action="{{ route('channels.store') }}">
+                        <form method="post" action="{{ route('playlists.store') }}">
                             <div class="form-group">
-                                <label for="channel_url">YouTube Channel URL</label>
-                                <input name="channel_url" id="channel_url" class="form-control" type="text" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="name">Channel Name (optional)</label>
-                                <input name="name" id="name" class="form-control" type="text">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="playlist_id">Playlist</label>
-                                <select name="playlist_id" id="playlist_id" class="form-control">
+                                <label for="playlist">Playlist</label>
+                                <select name="playlist" id="playlist" class="form-control">
                                     @foreach ($playlists->items as $playlist)
                                         <option value="{{ $playlist->id }}">{{ $playlist->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <button class="btn btn-success">Create Channel</button>
+                            <p>Channels:</p>
+
+                            @foreach ($userChannels as $userChannel)
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="channels[]" value="{{ $userChannel->id }}"
+                                               @if(in_array($userChannel->id, old('oldChannels', []))) checked="checked" @endif
+                                        >
+                                        {{ $userChannel->channel->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+
+                            <button class="btn btn-success">Add Playlist</button>
                             {{ csrf_field() }}
                         </form>
                     </div>

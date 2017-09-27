@@ -6,10 +6,10 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Tracks from {{ $channel->name }}
+                        Tracks added to {{ $playlist->name }}
 
                         <div class="pull-right">
-                            <a href="{{ route('channels.index') }}" class="btn btn-xs btn-default">
+                            <a href="{{ route('playlists.index') }}" class="btn btn-xs btn-default">
                                 Back
                             </a>
                         </div>
@@ -22,17 +22,12 @@
 
                         <table class="table table-striped">
                             <tr>
-                                <th>YouTube</th>
                                 <th>Spotify</th>
-                                <th>Created at</th>
+                                <th>YouTube</th>
+                                <th nowrap>Retrieved on</th>
                             </tr>
                             @foreach ($tracks as $track)
                                 <tr>
-                                    <td>
-                                        <a href="https://www.youtube.com/watch?v={{ $track->youtube_id }}" target="_blank">
-                                            {{ $track->name }}
-                                        </a>
-                                    </td>
                                     <td>
                                         @if ($track->spotify_id)
                                             <a href="https://open.spotify.com/track/{{ $track->spotify_id }}" target="_blank">
@@ -43,7 +38,12 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ $track->created_at->format('Y-m-d H:i') }}
+                                        <a href="https://www.youtube.com/watch?v={{ $track->youtube_id }}" target="_blank">
+                                            {{ $track->name }}
+                                        </a>
+                                    </td>
+                                    <td nowrap>
+                                        {{ $track->created_at->format('Y-m-d') }}
                                     </td>
                                 </tr>
                             @endforeach

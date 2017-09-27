@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\User;
-use App\Channel;
+use App\UserChannel;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ChannelPolicy
+class UserChannelPolicy
 {
     use HandlesAuthorization;
 
@@ -14,10 +14,10 @@ class ChannelPolicy
      * Determine whether the user can view the channel.
      *
      * @param  \App\User  $user
-     * @param  \App\Channel  $channel
+     * @param  \App\UserChannel  $channel
      * @return mixed
      */
-    public function view(User $user, Channel $channel)
+    public function view(User $user, UserChannel $channel)
     {
         return $user->id == $channel->user_id;
     }
@@ -37,10 +37,10 @@ class ChannelPolicy
      * Determine whether the user can update the channel.
      *
      * @param  \App\User  $user
-     * @param  \App\Channel  $channel
+     * @param  \App\UserChannel  $channel
      * @return mixed
      */
-    public function update(User $user, Channel $channel)
+    public function update(User $user, UserChannel $channel)
     {
         return $this->view($user, $channel);
     }
@@ -49,10 +49,10 @@ class ChannelPolicy
      * Determine whether the user can delete the channel.
      *
      * @param  \App\User  $user
-     * @param  \App\Channel  $channel
+     * @param  \App\UserChannel  $channel
      * @return mixed
      */
-    public function delete(User $user, Channel $channel)
+    public function delete(User $user, UserChannel $channel)
     {
         return $this->view($user, $channel);
     }

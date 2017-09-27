@@ -6,11 +6,11 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        My Channels
+                        My Playlists
 
-                        @can('create', \App\Channel::class)
-                            <a href="{{ route('channels.create') }}" class="btn btn-success btn-xs pull-right">
-                                New Channel
+                        @can('create', \App\Playlist::class)
+                            <a href="{{ route('playlists.create') }}" class="btn btn-success btn-xs pull-right">
+                                Add Playlist
                             </a>
                         @endcan
                     </div>
@@ -25,18 +25,19 @@
                                 <th>Name</th>
                                 <th class="text-right">Actions</th>
                             </tr>
-                            @foreach ($channels as $channel)
+                            @foreach ($playlists as $playlist)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('channels.show', ['channel' => $channel]) }}">
-                                            {{ $channel->name }}
+                                        <a href="{{ route('playlists.show', ['playlist' => $playlist]) }}">
+                                            {{ $playlist->name }}
                                         </a>
+                                        ({{ $playlist->channels->count() }} channels)
                                     </td>
                                     <td class="text-right">
-                                        <a href="{{ route('channels.edit', ['channel' => $channel]) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('playlists.edit', ['playlist' => $playlist]) }}" class="btn btn-primary btn-sm">
                                             Edit
                                         </a>
-                                        <form method="post" action="{{ route('channels.destroy', ['channel' => $channel]) }}"
+                                        <form method="post" action="{{ route('playlists.destroy', ['playlist' => $playlist]) }}"
                                               style="display: inline;"
                                         >
                                             <button class="btn btn-danger btn-sm">Delete</button>
@@ -46,9 +47,9 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            @if ($channels->count() == 0)
+                            @if ($playlists->count() == 0)
                                 <tr>
-                                    <td colspan="2">No channels yet.</td>
+                                    <td colspan="2">No playlists yet.</td>
                                 </tr>
                             @endif
                         </table>
