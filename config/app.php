@@ -178,6 +178,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SpotifyServiceProvider::class,
+        App\Providers\VideoParserServiceProvider::class,
 
     ],
 

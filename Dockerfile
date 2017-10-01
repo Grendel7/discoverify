@@ -7,8 +7,8 @@ RUN docker-php-ext-install gd curl json xml pdo_mysql zip
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
-# Install and upgrade NPM (for Laravel Mix)
-RUN apt-get update && apt-get install -y nodejs npm && npm install -g npm && npm install -g n && n 7.10.0 && ln -sf /usr/local/n/versions/node/7.10.0/bin/node /usr/bin/node && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache /root/.npm
+# Install NodeJS 6 (for Laravel Mix)
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nodejs && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache /root/.npm
 
 # Install Composer
 RUN curl https://getcomposer.org/composer.phar > /usr/local/bin/composer && chmod +x /usr/local/bin/composer
