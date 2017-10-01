@@ -149,7 +149,7 @@ class VideoParserServiceProvider extends ServiceProvider
         $name = str_replace('-', ' ', $name);
 
         // Remove special chars.
-        $name = preg_replace('/[^a-z0-9\s]/', '', Str::ascii($name));
+        $name = preg_replace('/[^a-z0-9\s!]/', '', Str::ascii($name));
 
         // Remove excess whitespace.
         $name = preg_replace('/ {2,}/', ' ', trim($name));
