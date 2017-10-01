@@ -104,11 +104,11 @@ class FetchTracks extends Command
                     return $track->spotify_id == $item->track->id;
                 });
 
-                if ($hasTrack) {
-                    return;
+                if (!$hasTrack) {
+                    app('spotify')->addUserPlaylistTracks(
+                        $userChannel->user->remote_id, $playlist->spotify_id, $track->spotify_id
+                    );
                 }
-
-                app('spotify')->addUserPlaylistTracks($userChannel->user->remote_id, $playlist->spotify_id, $track->spotify_id);
             }
         }
     }
