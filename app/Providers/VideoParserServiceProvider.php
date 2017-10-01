@@ -62,7 +62,7 @@ class VideoParserServiceProvider extends ServiceProvider
 
         foreach ($urls as $url) {
             try {
-                $page = (string) $this->guzzle->get($url, [
+                $page = (string)$this->guzzle->get($url, [
                     'on_stats' => function (TransferStats $stats) use (&$realUrl) {
                         $realUrl = $stats->getEffectiveUri();
                     }
@@ -86,7 +86,7 @@ class VideoParserServiceProvider extends ServiceProvider
                     return $spotifyId;
                 }
             } catch (RequestException $e) {
-                Log::warning('Could not get download gate from `'.$url.'`: '.$e->getMessage());
+                Log::warning('Could not get download gate from `' . $url . '`: ' . $e->getMessage());
             }
         }
 
@@ -157,21 +157,22 @@ class VideoParserServiceProvider extends ServiceProvider
         // Remove meaningless words.
         $name = implode(' ', array_filter(explode(' ', $name), function ($token) {
             return $token && !in_array($token, [
-                'ft',
-                'feat',
-                'remix',
-                'release',
-                'mix',
-                'lyric',
-                'video',
-                'exclusive',
-                'free',
-                'premiere',
-                'edit',
-                'ep',
-                'album',
-                'full'
-            ]);
+                    'ft',
+                    'feat',
+                    'remix',
+                    'release',
+                    'mix',
+                    'lyric',
+                    'video',
+                    'exclusive',
+                    'free',
+                    'premiere',
+                    'edit',
+                    'ep',
+                    'album',
+                    'full',
+                    'x'
+                ]);
         }));
 
         return $name;
