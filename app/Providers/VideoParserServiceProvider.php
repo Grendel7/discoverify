@@ -11,8 +11,8 @@ use Illuminate\Support\Str;
 
 class VideoParserServiceProvider extends ServiceProvider
 {
-    const BLACKLISTED_URLS = ['youtube.com', 'twitter.com', 'facebook.com', 'twitter.com', 'instagram.com',
-        'soundcloud.com'];
+    const BLACKLISTED_URLS = ['youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'soundcloud.com',
+        'paypal.com'];
 
     protected $defer = true;
     /**
