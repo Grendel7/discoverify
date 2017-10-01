@@ -69,7 +69,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
-                        <a href="{{ url('/channels') }}">My Account</a>
+                        <a href="{{ url('/tracks') }}">My Account</a>
                     @else
                         <a href="{{ url('/login') }}">Login</a>
                         @if (Route::has('register'))
