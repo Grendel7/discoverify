@@ -98,11 +98,23 @@ class FetchTracks extends Command
             app('spotify')->setAccessToken($userChannel->user->access_token);
 
             foreach ($userChannel->playlists as $playlist) {
-                $tracks = app('spotify')->getuserPlaylistTracks($userChannel->user->remote_id, $playlist->spotify_id);
+                $hasTrack = false;
+                $offset = 0;
 
-                $hasTrack = array_first($tracks->items, function($item) use ($track) {
-                    return $track->spotify_id == $item->track->id;
-                });
+                while (!$hasTrack) {
+                    $tracks = app('spotify')->getuserPlaylistTracks($userChannel->user->remote_id, $playlist->spotify_id, [
+                        'limit' => 100,
+                        'offset' => $offset,
+                    ]);
+
+                    $hasTrack = array_first($tracks->items, function($item) use ($track) {
+                        return $track->spotify_id == $item->track->id;
+                    });
+
+                    if (($offset += 100) > $tracks->total) {
+                        break;
+                    }
+                }
 
                 if (!$hasTrack) {
                     app('spotify')->addUserPlaylistTracks(
