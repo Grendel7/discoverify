@@ -4,6 +4,10 @@ if (!env('DB_DATABASE') && env('DATABASE_URL')) {
     $url = parse_url(env('DATABASE_URL'));
 }
 
+if (env('REDIS_URL')) {
+    $redisUrl = parse_url(env('REDIS_URL'));
+}
+
 return [
 
     /*
@@ -113,9 +117,9 @@ return [
         'client' => 'predis',
 
         'default' => [
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
-            'port' => env('REDIS_PORT', 6379),
+            'host' => env('REDIS_HOST', isset($redisUrl) ? $redisUrl['host'] : '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', isset($redisUrl) ? $redisUrl['pass'] : null),
+            'port' => env('REDIS_PORT', isset($redisUrl) ? $redisUrl['port'] : 6379),
             'database' => 0,
         ],
 
