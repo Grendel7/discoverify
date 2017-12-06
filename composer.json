@@ -6,13 +6,14 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "doctrine/inflector": "1.1.*",
         "guzzlehttp/guzzle": "~6.0",
         "jwilsson/spotify-web-api-php": "^1.12",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
-        "socialiteproviders/spotify": "^3.0",
-        "doctrine/inflector": "1.1.*"
+        "predis/predis": "^1.1",
+        "socialiteproviders/spotify": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
