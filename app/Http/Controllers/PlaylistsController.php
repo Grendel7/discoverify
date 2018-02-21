@@ -102,4 +102,13 @@ class PlaylistsController extends Controller
 
         return redirect()->route('playlists.index')->with('success', 'The playlist has been updated!');
     }
+
+    public function destroy(Playlist $playlist)
+    {
+        $this->authorize('delete', $playlist);
+
+        $playlist->delete();
+
+        return redirect()->route('playlists.index')->with('success', 'The playlist has been removed!');
+    }
 }
