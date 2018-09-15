@@ -1,11 +1,17 @@
 <?php
 
-if (!env('DB_DATABASE') && env('DATABASE_URL')) {
-    $url = parse_url(env('DATABASE_URL'));
+if (!env('DB_DATABASE')) {
+    if (env('DATABASE_URL')) {
+        $url = parse_url(env('DATABASE_URL'));
+    } elseif (env('JAWSDB_URL')) {
+        $url = parse_url(env('JAWSDB_URL'));
+    }
 }
 
 if (env('REDIS_URL')) {
     $redisUrl = parse_url(env('REDIS_URL'));
+} elseif (env('REDISCLOUD_URL')) {
+    $redisUrl = parse_url(env('REDISCLOUD_URL'));
 }
 
 return [

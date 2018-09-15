@@ -5,20 +5,21 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=5.6.4,<7.2",
         "doctrine/inflector": "1.1.*",
         "guzzlehttp/guzzle": "~6.0",
         "jwilsson/spotify-web-api-php": "^1.12",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.7.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "predis/predis": "^1.1",
-        "socialiteproviders/spotify": "^3.0"
+        "socialiteproviders/spotify": "^3.0",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
+        "filp/whoops": "~2.0",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7",
+        "phpunit/phpunit": "~6.0",
         "phpdocumentor/reflection-docblock": "^3.0.2"
     },
     "autoload": {
@@ -42,12 +43,14 @@
             "php artisan key:generate"
         ],
         "post-install-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postInstall"
         ],
         "post-update-cmd": [
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {
