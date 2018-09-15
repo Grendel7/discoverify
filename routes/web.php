@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+if (config('app.https')) {
+    URL::forceSchema('https');
+}
+
 Route::get('login/spotify', 'Auth\LoginController@redirectToProvider')->name('login.spotify');
 Route::get('login/spotify/callback', 'Auth\LoginController@handleProviderCallback');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
