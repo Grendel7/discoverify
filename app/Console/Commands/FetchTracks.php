@@ -35,6 +35,7 @@ class FetchTracks extends Command
      * Execute the console command.
      *
      * @return mixed
+     * @throws \Throwable
      */
     public function handle()
     {
@@ -102,7 +103,7 @@ class FetchTracks extends Command
                 $offset = 0;
 
                 while (!$hasTrack) {
-                    $tracks = app('spotify')->getuserPlaylistTracks($userChannel->user->remote_id, $playlist->spotify_id, [
+                    $tracks = app('spotify')->getPlaylistTracks($playlist->spotify_id, [
                         'limit' => 100,
                         'offset' => $offset,
                     ]);
@@ -117,9 +118,7 @@ class FetchTracks extends Command
                 }
 
                 if (!$hasTrack) {
-                    app('spotify')->addUserPlaylistTracks(
-                        $userChannel->user->remote_id, $playlist->spotify_id, $track->spotify_id
-                    );
+                    app('spotify')->addPlaylistTracks($playlist->spotify_id, $track->spotify_id);
                 }
             }
         }

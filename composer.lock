@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e3c7e4bdab60498086706d3be1975d1",
+    "content-hash": "34104915cf6be6b9bfbaf3a41adfd06c",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -636,25 +636,25 @@
         },
         {
             "name": "jwilsson/spotify-web-api-php",
-            "version": "1.12.0",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-                "reference": "ecda858d53b2d4b04a44f4f1095ab0a6a3161a1c"
+                "reference": "72de0fe8f0b78499a5a369d60f299cba98257c52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/ecda858d53b2d4b04a44f4f1095ab0a6a3161a1c",
-                "reference": "ecda858d53b2d4b04a44f4f1095ab0a6a3161a1c",
+                "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/72de0fe8f0b78499a5a369d60f299cba98257c52",
+                "reference": "72de0fe8f0b78499a5a369d60f299cba98257c52",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": "^5.5 || ^7.0"
+                "php": "^5.6 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8 || ^5.7",
-                "satooshi/php-coveralls": "dev-master",
+                "php-coveralls/php-coveralls": "^2.0",
+                "phpunit/phpunit": "^5.7 || ^6.0",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -678,7 +678,7 @@
             "keywords": [
                 "spotify"
             ],
-            "time": "2017-07-26T14:40:41+00:00"
+            "time": "2018-09-19T17:21:02+00:00"
         },
         {
             "name": "laravel/framework",
