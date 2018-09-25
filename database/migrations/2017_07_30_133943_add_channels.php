@@ -16,12 +16,8 @@ class AddChannels extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('channel_id');
-            $table->string('playlist_id');
-            $table->unsignedInteger('user_id');
+            $table->string('youtube_id')->unique();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
