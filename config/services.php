@@ -30,6 +30,12 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'spotify' => [
+        'client_id' => env('SPOTIFY_KEY'),
+        'client_secret' => env('SPOTIFY_SECRET'),
+        'redirect' => env('SPOTIFY_REDIRECT_URI'),
+    ],
+
     'stripe' => [
         'model' => App\User::class,
         'key' => env('STRIPE_KEY'),

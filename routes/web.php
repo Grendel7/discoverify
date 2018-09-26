@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('login/spotify', 'Auth\LoginController@redirectToProvider')->name('login.spotify');
-Route::get('login/spotify/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('login/spotify/callback', 'Auth\LoginController@handleProviderCallback')->name('login.spotify.callback');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
