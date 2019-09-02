@@ -1,4 +1,4 @@
-FROM php:7.2-cli
+FROM php:7.3-cli
 
 RUN docker-php-ext-install pdo_mysql \
     && pecl install xdebug \
@@ -7,7 +7,7 @@ RUN docker-php-ext-install pdo_mysql \
 # Install NodeJS (for Laravel Mix)
 RUN apt-get update \
     && apt-get install -y gnupg \
-    && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache /root/.npm
 
