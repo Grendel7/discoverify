@@ -163,6 +163,7 @@ class VideoParserServiceProvider extends ServiceProvider
                     'release',
                     'mix',
                     'lyric',
+                    'lyrics',
                     'video',
                     'exclusive',
                     'free',
