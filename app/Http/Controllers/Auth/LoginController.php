@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -30,7 +32,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/tracks';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -69,7 +71,7 @@ class LoginController extends Controller
             $user = new User();
             $user->remote_id = $spotifyUser->getId();
             $user->social_driver = 'spotify';
-            $user->password = bcrypt(str_random());
+            $user->password = bcrypt(Str::random());
         }
 
         $user->email = $spotifyUser->getEmail();

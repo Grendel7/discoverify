@@ -3,8 +3,9 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use SpotifyWebAPI\Session;
 
 class User extends Authenticatable
@@ -27,7 +28,15 @@ class User extends Authenticatable
         'password', 'remember_token', 'access_token', 'refresh_token',
     ];
 
-    protected $dates = ['created_at', 'updated_at', 'token_expires_at'];
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'token_expires_at' => 'datetime',
+    ];
 
     public function channels()
     {

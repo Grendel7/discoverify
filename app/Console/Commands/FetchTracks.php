@@ -6,6 +6,7 @@ use App\Channel;
 use App\Track;
 use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class FetchTracks extends Command
 {
@@ -108,7 +109,7 @@ class FetchTracks extends Command
                         'offset' => $offset,
                     ]);
 
-                    $hasTrack = array_first($tracks->items, function($item) use ($track) {
+                    $hasTrack = Arr::first($tracks->items, function($item) use ($track) {
                         return $track->spotify_id == $item->track->id;
                     });
 

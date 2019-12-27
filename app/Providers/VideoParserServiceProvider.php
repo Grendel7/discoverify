@@ -5,6 +5,7 @@ namespace App\Providers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\TransferStats;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -57,7 +58,7 @@ class VideoParserServiceProvider extends ServiceProvider
         preg_match_all('/https?\:\/\/[^\",\s]+/i', $description, $matches);
 
         $urls = array_filter($matches[0], function ($url) {
-            return !str_contains($url, self::BLACKLISTED_URLS);
+            return !Str::contains($url, self::BLACKLISTED_URLS);
         });
 
         foreach ($urls as $url) {
@@ -68,7 +69,7 @@ class VideoParserServiceProvider extends ServiceProvider
                     }
                 ])->getBody();
 
-                if (str_contains($realUrl, '.spotify.com')) {
+                if (Str::contains($realUrl, '.spotify.com')) {
                     if (preg_match('/https?\:\/\/open\.spotify\.com\/track\/(\w+)/', $realUrl, $matches)) {
                         $spotifyId = $matches[1];
                     } elseif (preg_match('/https?\:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
@@ -76,7 +77,7 @@ class VideoParserServiceProvider extends ServiceProvider
                     } else {
                         $spotifyId = null;
                     }
-                } elseif (!str_contains($realUrl, self::BLACKLISTED_URLS)) {
+                } elseif (!Str::contains($realUrl, self::BLACKLISTED_URLS)) {
                     $spotifyId = $this->getSpotifyIdFromPage($page);
                 } else {
                     $spotifyId = null;
@@ -122,7 +123,7 @@ class VideoParserServiceProvider extends ServiceProvider
         $album = app('spotify')->getAlbum($albumId);
 
         if ($album->album_type == 'single') {
-            return array_first($album->tracks->items)->id;
+            return Arr::first($album->tracks->items)->id;
         }
     }
 
@@ -132,7 +133,7 @@ class VideoParserServiceProvider extends ServiceProvider
 
         $results = app('spotify')->search($title, 'track');
 
-        if ($track = array_first($results->tracks->items)) {
+        if ($track = Arr::first($results->tracks->items)) {
             return $track->id;
         }
     }

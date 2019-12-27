@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Playlist;
 use App\Track;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class PlaylistsController extends Controller
 {
@@ -64,7 +65,7 @@ class PlaylistsController extends Controller
             ]
         ]);
 
-        $spotifyPlaylist = array_first($playlists, function ($playlist) use ($request) {
+        $spotifyPlaylist = Arr::first($playlists, function ($playlist) use ($request) {
             return $playlist->id == $request->get('playlist');
         });
 

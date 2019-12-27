@@ -3,13 +3,13 @@ FROM php:7.3-cli AS composer
 COPY . /mnt
 
 # Install Composer
-RUN apt-get update && apt-get install -y --no-install-recommends git unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip zip \
     && curl https://getcomposer.org/composer.phar > /usr/local/bin/composer \
     && chmod +x /usr/local/bin/composer \
     && cd /mnt \
     && composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-FROM node:10 as mix
+FROM node:12 as mix
 
 COPY . /mnt
 
