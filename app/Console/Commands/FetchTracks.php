@@ -75,11 +75,10 @@ class FetchTracks extends Command
         $track->name = $entry->title;
         $track->channel_id = $channel->id;
 
-        $spotifyId = app('video_parser')->mapTrackToSpotifyId($entry);
+        $spotifyTrack = app('video_parser')->getSpotifyTrackFromVideo($entry);
 
-        if ($spotifyId) {
-            $spotifyTrack = app('spotify')->getTrack($spotifyId);
-            $track->spotify_id = $spotifyId;
+        if ($spotifyTrack) {
+            $track->spotify_id = $spotifyTrack->id;
 
             $artists = implode(', ', array_map(function ($artist) {
                 return $artist->name;

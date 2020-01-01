@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
+        "ext-simplexml": "*",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "~6.0",
         "jwilsson/spotify-web-api-php": "^2.6",

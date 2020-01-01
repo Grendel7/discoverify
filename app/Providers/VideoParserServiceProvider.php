@@ -5,17 +5,18 @@ namespace App\Providers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\TransferStats;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use SpotifyWebAPI\SpotifyWebAPIException;
 
-class VideoParserServiceProvider extends ServiceProvider
+class VideoParserServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    const BLACKLISTED_URLS = ['youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'soundcloud.com',
-        'paypal.com'];
-
-    protected $defer = true;
+    const BLACKLISTED_URLS = [
+        'youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'soundcloud.com', 'paypal.com',
+    ];
     /**
      * @var Client
      */
@@ -34,57 +35,69 @@ class VideoParserServiceProvider extends ServiceProvider
         return ['video_parser'];
     }
 
-    public function mapTrackToSpotifyId(\SimpleXMLElement $entry)
+    /**
+     * Get a Spotify track object for the video.
+     *
+     * It first tries to grab the Spotify link from the video description (also checking fangates). If that fails, it
+     * tries to use the video title to search on Spotify.
+     *
+     * @see https://developer.spotify.com/documentation/web-api/reference/object-model/#track-object-full
+     * @param \SimpleXMLElement $entry
+     * @return array|null
+     * @throws SpotifyWebAPIException
+     */
+    public function getSpotifyTrackFromVideo(\SimpleXMLElement $entry)
     {
         $name = $entry->title;
         $description = $entry->children('media', true)->group->description;
 
-        $spotifyId = $this->getTrackFromDescription($description);
-
-        if ($spotifyId) {
-            return $spotifyId;
+        if ($track = $this->getTrackFromDescription($description)) {
+            return $track;
         }
 
-        $spotifyId = $this->getTrackFromSearch($name);
-
-        if ($spotifyId) {
-            return $spotifyId;
-        }
+        return $this->getTrackFromSearch($name);
     }
 
-    public function getTrackFromDescription($description)
+    /**
+     * Attempt to get a Spotify track object by parsing the description.
+     *
+     * It pulls all the URLs from the video description and polls all those URLs to find a Spotify web player URL.
+     *
+     * @param string $description
+     * @return array|null
+     * @throws SpotifyWebAPIException
+     */
+    public function getTrackFromDescription(string $description)
     {
+        // Get all the URLs from the video description.
         $matches = [];
-        preg_match_all('/https?\:\/\/[^\",\s]+/i', $description, $matches);
+        preg_match_all('/https?:\/\/[^\",\s]+/i', $description, $matches);
 
+        // Remove all the blacklisted domains from the URL set (hopefully prevents redirect loops).
         $urls = array_filter($matches[0], function ($url) {
             return !Str::contains($url, self::BLACKLISTED_URLS);
         });
 
+        // Go through all the URLs to find a Spotify URL.
         foreach ($urls as $url) {
             try {
-                $page = (string)$this->guzzle->get($url, [
-                    'on_stats' => function (TransferStats $stats) use (&$realUrl) {
-                        $realUrl = $stats->getEffectiveUri();
-                    }
-                ])->getBody();
-
-                if (Str::contains($realUrl, '.spotify.com')) {
-                    if (preg_match('/https?\:\/\/open\.spotify\.com\/track\/(\w+)/', $realUrl, $matches)) {
-                        $spotifyId = $matches[1];
-                    } elseif (preg_match('/https?\:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
-                        $spotifyId = $this->getTrackFromAlbum($matches[1]);
-                    } else {
-                        $spotifyId = null;
-                    }
-                } elseif (!Str::contains($realUrl, self::BLACKLISTED_URLS)) {
-                    $spotifyId = $this->getSpotifyIdFromPage($page);
-                } else {
-                    $spotifyId = null;
-                }
+                $spotifyId = $this->getSpotifyIdFromUrl($url);
 
                 if ($spotifyId) {
-                    return $spotifyId;
+                    try {
+                        return app('spotify')->getTrack($spotifyId);
+                    } catch (SpotifyWebAPIException $e) {
+                        if (Str::contains($e->getMessage(), 'non existing id')) {
+                            Log::warning('Video description has invalid track ID.', [
+                                'trackId' => $spotifyId,
+                                'description' => $description,
+                            ]);
+
+                            return null;
+                        } else {
+                            throw $e;
+                        }
+                    }
                 }
             } catch (RequestException $e) {
                 Log::warning('Could not get download gate from `' . $url . '`: ' . $e->getMessage());
@@ -94,31 +107,83 @@ class VideoParserServiceProvider extends ServiceProvider
         return null;
     }
 
-    protected function getSpotifyIdFromPage($page)
+    /**
+     * Take the URL from the video title and attempt to get a Spotify track ID from it.
+     *
+     * @param string $url
+     * @return string|null
+     */
+    protected function getSpotifyIdFromUrl(string $url)
     {
-        $matches = [];
-        if (preg_match('/spotify\:track:(\w+)/', $page, $matches)) {
-            $trackId = $matches[1];
-        } elseif (preg_match('/https?\:\/\/open\.spotify\.com\/track\/(\w+)/', $page, $matches)) {
-            $trackId = $matches[1];
-        } elseif (preg_match('/spotify\:album:(\w+)/', $page, $matches)) {
-            $albumId = $matches[1];
-        } elseif (preg_match('/https?\:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
-            $albumId = $matches[1];
-        } else {
+        // Fetch the URL which was present in the description.
+        // Also capture the real URL in case there are redirects.
+        $page = (string)$this->guzzle->get($url, [
+            'on_stats' => function (TransferStats $stats) use (&$realUrl) {
+                $realUrl = $stats->getEffectiveUri();
+            }
+        ])->getBody();
+
+        if (Str::contains($realUrl, '.spotify.com')) {
+            // Check if we're already looking at a Spotify URL.
+            if (preg_match('/https?:\/\/open\.spotify\.com\/track\/(\w+)/', $realUrl, $matches)) {
+                return $matches[1];
+            } elseif (preg_match('/https?:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
+                return $this->getTrackFromAlbum($matches[1]);
+            } else {
+                return null;
+            }
+        } elseif (Str::contains($realUrl, self::BLACKLISTED_URLS)) {
+            // We were redirected to a blacklisted domain.
             return null;
+        } else {
+            // Check if we've not been forwarded to a blacklisted domain name. If not, check the page for Spotify URLs.
+            return $this->getSpotifyIdFromPageContent($page);
+        }
+    }
+
+    /**
+     * Try to get a Spotify URL from the page content (e.g. a fan gate).
+     *
+     * @param string $page
+     * @return string|null
+     */
+    protected function getSpotifyIdFromPageContent(string $page)
+    {
+        // Look for a track ID.
+        $matches = [];
+        if (preg_match('/spotify:track:(\w+)/', $page, $matches)) {
+            // We have a Spotify desktop URL.
+            $trackId = $matches[1];
+        } elseif (preg_match('/https?:\/\/open\.spotify\.com\/track\/(\w+)/', $page, $matches)) {
+            // We have Spotify web player URL.
+            $trackId = $matches[1];
         }
 
         if (isset($trackId)) {
             return $trackId;
-        } elseif (isset($albumId)) {
-            return $this->getTrackFromAlbum($albumId);
-        } else {
-            throw new \ErrorException('No parse exception was thrown but no album ID and track ID were available either.');
         }
+
+        // Look for an album ID.
+        if (preg_match('/spotify:album:(\w+)/', $page, $matches)) {
+            $albumId = $matches[1];
+        } elseif (preg_match('/https?:\/\/open\.spotify\.com\/album\/(\w+)/', $page, $matches)) {
+            $albumId = $matches[1];
+        }
+
+        if (isset($albumId)) {
+            return $this->getTrackFromAlbum($albumId);
+        }
+
+        return null;
     }
 
-    protected function getTrackFromAlbum($albumId)
+    /**
+     * Try to get a track ID from an album. Currently only supports "single" type albums.
+     *
+     * @param string $albumId
+     * @return string|null
+     */
+    protected function getTrackFromAlbum(string $albumId)
     {
         $album = app('spotify')->getAlbum($albumId);
 
@@ -127,17 +192,27 @@ class VideoParserServiceProvider extends ServiceProvider
         }
     }
 
-    public function getTrackFromSearch($name)
+    /**
+     * Attempt to find the track by searching Spotify for the video title.
+     *
+     * @param string $title
+     * @return array|null
+     */
+    public function getTrackFromSearch($title)
     {
-        $title = $this->normalizeTitle($name);
+        $normalizedTitle = $this->normalizeTitle($title);
 
-        $results = app('spotify')->search($title, 'track');
+        $results = app('spotify')->search($normalizedTitle, 'track');
 
-        if ($track = Arr::first($results->tracks->items)) {
-            return $track->id;
-        }
+        return Arr::first($results->tracks->items);
     }
 
+    /**
+     * Normalize the video title so the Spotify search engine can process it effectively.
+     *
+     * @param string $name
+     * @return string
+     */
     protected function normalizeTitle($name)
     {
         // Remove stuff like [NCS Release].
