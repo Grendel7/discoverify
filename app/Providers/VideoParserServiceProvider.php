@@ -17,6 +17,11 @@ class VideoParserServiceProvider extends ServiceProvider implements DeferrablePr
     const BLACKLISTED_URLS = [
         'youtube.com', 'twitter.com', 'facebook.com', 'instagram.com', 'soundcloud.com', 'paypal.com',
     ];
+    const BLACKLISTED_SEARCH_WORDS = [
+        'album', 'audio', 'edit', 'ep', 'exclusive', 'feat', 'free', 'ft', 'full', 'lyric', 'lyrics', 'mix', 'music',
+        'official', 'premiere', 'release', 'remix', 'video', 'x',
+    ];
+
     /**
      * @var Client
      */
@@ -244,24 +249,7 @@ class VideoParserServiceProvider extends ServiceProvider implements DeferrablePr
 
         // Remove meaningless words.
         $name = implode(' ', array_filter(explode(' ', $name), function ($token) {
-            return $token && !in_array($token, [
-                    'ft',
-                    'feat',
-                    'remix',
-                    'release',
-                    'mix',
-                    'lyric',
-                    'lyrics',
-                    'video',
-                    'exclusive',
-                    'free',
-                    'premiere',
-                    'edit',
-                    'ep',
-                    'album',
-                    'full',
-                    'x'
-                ]);
+            return $token && !in_array($token, static::BLACKLISTED_SEARCH_WORDS);
         }));
 
         return $name;
