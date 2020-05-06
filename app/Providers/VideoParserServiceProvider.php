@@ -185,10 +185,22 @@ class VideoParserServiceProvider extends ServiceProvider implements DeferrablePr
      */
     protected function getTrackFromAlbum(string $albumId)
     {
-        $album = app('spotify')->getAlbum($albumId);
+        try {
+            $album = app('spotify')->getAlbum($albumId);
 
-        if ($album->album_type == 'single') {
-            return Arr::first($album->tracks->items)->id;
+            if ($album->album_type == 'single') {
+                return Arr::first($album->tracks->items)->id;
+            }
+        } catch (SpotifyWebAPIException $e) {
+            if (Str::contains($e->getMessage(), 'non existing id')) {
+                Log::warning('Video description has invalid album ID.', [
+                    'albumId' => $albumId,
+                ]);
+
+                return null;
+            } else {
+                throw $e;
+            }
         }
     }
 
