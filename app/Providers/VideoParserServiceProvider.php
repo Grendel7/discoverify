@@ -54,13 +54,14 @@ class VideoParserServiceProvider extends ServiceProvider implements DeferrablePr
     public function getSpotifyTrackFromVideo(\SimpleXMLElement $entry)
     {
         $name = $entry->title;
-        $description = $entry->children('media', true)->group->description;
 
-        if ($track = $this->getTrackFromDescription($description)) {
+        if ($track = $this->getTrackFromSearch($name)) {
             return $track;
         }
 
-        return $this->getTrackFromSearch($name);
+        $description = $entry->children('media', true)->group->description;
+
+        return $this->getTrackFromDescription($description);
     }
 
     /**
