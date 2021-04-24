@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         My Tracks
@@ -16,12 +16,18 @@
 
                         <table class="table table-striped">
                             <tr>
-                                <th>YouTube</th>
+                                <th>Channel Name</th>
+                                <th>Video Name</th>
                                 <th>Spotify</th>
                                 <th nowrap>Retrieved on</th>
                             </tr>
                             @foreach ($tracks as $track)
                                 <tr>
+                                    <td>
+                                        <a href="https://www.youtube.com/channel/{{ $track->channel->youtube_id }}" target="_blank">
+                                            {{ $track->channel->name }}
+                                        </a>
+                                    </td>
                                     <td>
                                         <a href="https://www.youtube.com/watch?v={{ $track->youtube_id }}" target="_blank">
                                             {{ $track->name }}
