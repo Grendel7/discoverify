@@ -8,7 +8,7 @@
                     <div class="panel-heading">
                         My Channels
 
-                        @can('create', \App\UserChannel::class)
+                        @can('create', \App\Models\UserChannel::class)
                             <a href="{{ route('userChannels.create') }}" class="btn btn-success btn-xs pull-right">
                                 New Channel
                             </a>
@@ -34,10 +34,12 @@
                                         ({{ $userChannel->playlists->count() }} playlists)
                                     </td>
                                     <td class="text-right">
-                                        <a href="{{ route('userChannels.edit', ['userChannel' => $userChannel]) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('userChannels.edit', ['userChannel' => $userChannel]) }}"
+                                           class="btn btn-primary btn-sm">
                                             Edit
                                         </a>
-                                        <form method="post" action="{{ route('userChannels.destroy', ['userChannel' => $userChannel]) }}"
+                                        <form method="post"
+                                              action="{{ route('userChannels.destroy', ['userChannel' => $userChannel]) }}"
                                               style="display: inline;"
                                         >
                                             <button class="btn btn-danger btn-sm">Delete</button>

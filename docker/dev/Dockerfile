@@ -1,4 +1,4 @@
-FROM php:7.3-cli
+FROM php:8.1-cli
 
 RUN apt-get update \
     && apt-get install zip unzip \
@@ -13,10 +13,8 @@ RUN docker-php-ext-install pdo_mysql \
 # Install NodeJS (for Laravel Mix)
 RUN apt-get update \
     && apt-get install -y gnupg \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-    && apt-get install -y nodejs yarn \
+    && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache /root/.npm
 

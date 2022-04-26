@@ -1,4 +1,4 @@
-FROM php:7.3-cli AS composer
+FROM php:8.1-cli AS composer
 
 COPY . /mnt
 
@@ -9,15 +9,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends git unzip zip \
     && cd /mnt \
     && composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-FROM node:12 as mix
+FROM node:16 as mix
 
 COPY . /mnt
 
 RUN cd /mnt \
-    && yarn install \
-    && yarn run prod
+    && npm install \
+    && npm run production
 
-FROM php:7.3-apache
+FROM php:8.1-apache
 
 RUN docker-php-ext-install pdo_mysql opcache \
     && pecl install redis \
@@ -35,9 +35,9 @@ RUN a2enmod rewrite remoteip ;\
 
 COPY . /var/www/html
 COPY --from=composer /mnt/vendor /var/www/html/vendor
+COPY --from=composer /mnt/bootstrap /var/www/html/bootstrap
 COPY --from=mix /mnt/public /var/www/html/public
 
 ENV LOG_CHANNEL=errorlog
 
-RUN chown -R www-data:www-data /var/www/html/storage \
-    && php artisan package:discover
+RUN chown -R www-data:www-data /var/www/html/storage

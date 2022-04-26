@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Playlist;
-use App\Track;
+use App\Models\Playlist;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 

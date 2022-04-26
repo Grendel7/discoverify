@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Track;
+use App\Models\Track;
 use Illuminate\Http\Request;
 
 class TracksController extends Controller

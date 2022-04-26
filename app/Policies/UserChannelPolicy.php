@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\UserChannel;
+use App\Models\UserChannel;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserChannelPolicy
@@ -13,8 +13,8 @@ class UserChannelPolicy
     /**
      * Determine whether the user can view the channel.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserChannel  $channel
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\UserChannel  $channel
      * @return mixed
      */
     public function view(User $user, UserChannel $channel)
@@ -25,7 +25,7 @@ class UserChannelPolicy
     /**
      * Determine whether the user can create channels.
      *
-     * @param  \App\User  $user
+     * @param  \App\Models\User  $user
      * @return mixed
      */
     public function create(User $user)
@@ -36,8 +36,8 @@ class UserChannelPolicy
     /**
      * Determine whether the user can update the channel.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserChannel  $channel
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\UserChannel  $channel
      * @return mixed
      */
     public function update(User $user, UserChannel $channel)
@@ -48,8 +48,8 @@ class UserChannelPolicy
     /**
      * Determine whether the user can delete the channel.
      *
-     * @param  \App\User  $user
-     * @param  \App\UserChannel  $channel
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\UserChannel  $channel
      * @return mixed
      */
     public function delete(User $user, UserChannel $channel)

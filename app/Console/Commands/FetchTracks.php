@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Channel;
-use App\Track;
-use App\User;
+use App\Models\Channel;
+use App\Models\Track;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 

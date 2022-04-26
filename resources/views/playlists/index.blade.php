@@ -8,7 +8,7 @@
                     <div class="panel-heading">
                         My Playlists
 
-                        @can('create', \App\Playlist::class)
+                        @can('create', \App\Models\Playlist::class)
                             <a href="{{ route('playlists.create') }}" class="btn btn-success btn-xs pull-right">
                                 Add Playlist
                             </a>
@@ -34,10 +34,12 @@
                                         ({{ $playlist->channels->count() }} channels)
                                     </td>
                                     <td class="text-right">
-                                        <a href="{{ route('playlists.edit', ['playlist' => $playlist]) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('playlists.edit', ['playlist' => $playlist]) }}"
+                                           class="btn btn-primary btn-sm">
                                             Edit
                                         </a>
-                                        <form method="post" action="{{ route('playlists.destroy', ['playlist' => $playlist]) }}"
+                                        <form method="post"
+                                              action="{{ route('playlists.destroy', ['playlist' => $playlist]) }}"
                                               style="display: inline;"
                                         >
                                             <button class="btn btn-danger btn-sm">Delete</button>

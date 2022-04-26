@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Channel;
-use App\UserChannel;
+use App\Models\Channel;
+use App\Models\UserChannel;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
