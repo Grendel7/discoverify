@@ -15,7 +15,7 @@ services:
       dockerfile: docker/dev/Dockerfile
     command: php /home/docker/html/artisan serve --host=0.0.0.0
     ports:
-      - 127.0.0.1:8001:8000
+      - "127.0.0.1:8001:8000"
     links:
       - db
     volumes:
